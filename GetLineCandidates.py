@@ -187,8 +187,8 @@ ax1 = fig1.add_subplot(111)
 
 for i in range(args.MaxSigmas):
 	print(50*'-')
-	Sources_real = LineSeekerFunctions.GetSourcesFromFiles([args.LineSearchPath+'/line_dandidates_sn_sigmas'+str(i)+'_pos'],args.MinSN,PixelsPerBMAJ)
-	Sources_realNeg = LineSeekerFunctions.GetSourcesFromFiles([args.LineSearchPath+'/line_dandidates_sn_sigmas'+str(i)+'_neg'],args.MinSN,PixelsPerBMAJ)
+	Sources_real = np.array(LineSeekerFunctions.GetSourcesFromFiles([args.LineSearchPath+'/line_dandidates_sn_sigmas'+str(i)+'_pos'],args.MinSN,PixelsPerBMAJ), dtype=object)
+	Sources_realNeg = np.array(LineSeekerFunctions.GetSourcesFromFiles([args.LineSearchPath+'/line_dandidates_sn_sigmas'+str(i)+'_neg'],args.MinSN,PixelsPerBMAJ), dtype=object)
 
 	simulations_folders = glob.glob(args.SimulationPath+'/simul_*')
 	SimulatedSources = []
