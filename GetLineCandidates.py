@@ -138,6 +138,7 @@ parser.add_argument('-LegendFontSize', type=float, default='10.0', required=Fals
 parser.add_argument('-UserEPS', type=str, default='False',choices=['True','False'], required=False , help = 'Whether to use EPS value entered from user otherwise use number of pixels per bmaj [Default:False]')
 parser.add_argument('-EPS', type=float, default=5.0, required=False , help = 'EPS value to use if User sets -UserEPS to True [Default:5.0]')
 parser.add_argument('-UseFactorLEE', type=str, default='False',choices=['True','False'], required=False , help = 'Whether to correct by the Look-Elsewhere effect using only a factor (1 + (ln(MaxSigmas -1) + 1/(2*(MaxSigmas -1))) + 0.577) [Default:False]')
+parser.add_argument('-NoStokes', action='store_true', required=False, help = 'Trigger this flag if the cube has no stokes axis')
 
 args = parser.parse_args()
 
@@ -516,7 +517,10 @@ else:
 hdulist =   fits.open(args.Cube,memmap=True)
 w = wcs.WCS(hdulist[0].header)
 
-[ra,dec,freq,stoke] =  w.all_pix2world(FinalX,FinalY,FinalChannel,np.zeros_like(FinalChannel),0)
+if args.NoStokes:
+        [ra,dec,freq] =  w.all_pix2world(FinalX,FinalY,FinalChannel,0)
+else:
+        [ra,dec,freq,stoke] =  w.all_pix2world(FinalX,FinalY,FinalChannel,np.zeros_like(FinalChannel),0)
 c = []
 for i in range(len(ra)):
   c.append(SkyCoord(ra[i], dec[i], frame='icrs', unit='deg'))
@@ -592,8 +596,10 @@ else:
 
 
 
-
-[ra,dec,freq,stoke] =  w.all_pix2world(FinalX,FinalY,FinalChannel,np.zeros_like(FinalChannel),0)
+if args.NoStokes:
+        [ra,dec,freq] =  w.all_pix2world(FinalX,FinalY,FinalChannel,0)
+else:
+        [ra,dec,freq,stoke] =  w.all_pix2world(FinalX,FinalY,FinalChannel,np.zeros_like(FinalChannel),0)
 c = []
 for i in range(len(ra)):
   c.append(SkyCoord(ra[i], dec[i], frame='icrs', unit='deg'))
