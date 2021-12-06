@@ -123,12 +123,15 @@ def SearchLine(CubePath,FolderForLinesFiles,MinSN,sigmas,UseMask,ContinuumImage,
     data = 0
     print('Negative pixels in search for Sigmas:',sigmas,'N:',len(pix2))
 
-def SimulateCube(CubePath):
+def SimulateCube(CubePath, NoStokes=False):
     print(100*'#')
     print('Creating Simulated Cube...')
     hdulist =   fits.open(CubePath,memmap=True)
     head = hdulist[0].header
-    data = hdulist[0].data[0]
+    if NoStokes:
+        data = hdulist[0].data
+    else:
+        data = hdulist[0].data[0]
 
     try:
         BMAJ = hdulist[1].data.field('BMAJ')
@@ -188,7 +191,10 @@ def SimulateCube(CubePath):
             RandomNoiseCube[i] = 0.0
         RandomNoiseCube[i][np.isnan(data[i])] = np.nan
 
-    hdulist[0].data[0] = RandomNoiseCube
+    if NoStokes:
+        hdulist[0].data = RandomNoiseCube
+    else:
+        hdulist[0].data[0] = RandomNoiseCube
     hdulist.writeto('SimulatedCube.fits',overwrite=True)
     hdulist.close()
     hdulist = None

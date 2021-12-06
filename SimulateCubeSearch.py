@@ -85,7 +85,8 @@ def main():
     parser.add_argument('-UseMask', type=str, default = 'False',choices=['True','False'], required=False,help = 'S/N value to use as limit to create mask from continuum image. [Default:5.0]')
     parser.add_argument('-Kernel', type=str, default = 'Gaussian',choices=['Gaussian','gaussian','Tophat','tophat'], required=False,help = 'Type of kernel to use for the convolution. [Default:Gaussian]')
     parser.add_argument('-NSimulations', type=int, default = 50, required=False,help = 'Number of cubes to be simulated . [Default:50]')
- 
+    parser.add_argument('-NoStokes', action='store_true', required=False, help = 'Trigger this flag if the cube has no stokes axis')
+
     args = parser.parse_args()
 
     #Checking input arguments
@@ -160,7 +161,7 @@ def main():
 
     for SimulationIndex in range(args.NSimulations):
         print('*** Cube: '+str(SimulationIndex+1)+'/'+str(args.NSimulations)+' ***')
-        LineSeekerFunctions.SimulateCube(args.Cube)
+        LineSeekerFunctions.SimulateCube(args.Cube, args.NoStokes)
         os.mkdir(args.OutputPath+'/simul_'+str(SimulationIndex))
         NewPathOutput = args.OutputPath+'/simul_'+str(SimulationIndex)
         # Main loop to do the search
