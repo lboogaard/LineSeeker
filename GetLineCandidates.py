@@ -387,7 +387,8 @@ for i in range(args.MaxSigmas):
 							PSimulationExpectedTotalE2Real,
 							PPoissonExpectedTotalReal,
 							PPoissonExpectedTotalE1Real,
-							PPoissonExpectedTotalE2Real
+							PPoissonExpectedTotalE2Real,
+                                                        i
 						]
 			SourcesTotalPos.append(NewSource)
 
@@ -452,7 +453,8 @@ for i in range(args.MaxSigmas):
 							PSimulationExpectedTotalE2Real,
 							PPoissonExpectedTotalReal,
 							PPoissonExpectedTotalE1Real,
-							PPoissonExpectedTotalE2Real
+							PPoissonExpectedTotalE2Real,
+                                                        i
 						]
 			SourcesTotalNeg.append(NewSource)
 
@@ -463,7 +465,7 @@ SNFinalNeg = LineSeekerFunctions.GetFinalSN(SourcesTotalNeg,PixelsPerBMAJ)
 
 ######## Positives ########
 
-FinalX,FinalY,FinalChannel,FinalPuritySimulation,FinalPurityNegative,FinalPurityPoisson,FinalSN,FinalPSimultionE1,FinalPSimultionE2,FinalPPoissonE1,FinalPPoissonE2,FinalPuritySimulationE1,FinalPuritySimulationE2,FinalpNegDiv,FinalpNegDivE1,FinalpNegDivE2,FinalpSimExp,FinalpSimExpE1,FinalpSimExpE2,FinalpPoiExp,FinalpPoiExpE1,FinalpPoiExpE2 = LineSeekerFunctions.GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ)
+FinalX,FinalY,FinalChannel,FinalPuritySimulation,FinalPurityNegative,FinalPurityPoisson,FinalSN,FinalPSimultionE1,FinalPSimultionE2,FinalPPoissonE1,FinalPPoissonE2,FinalPuritySimulationE1,FinalPuritySimulationE2,FinalpNegDiv,FinalpNegDivE1,FinalpNegDivE2,FinalpSimExp,FinalpSimExpE1,FinalpSimExpE2,FinalpPoiExp,FinalpPoiExpE1,FinalpPoiExpE2,Kernel = LineSeekerFunctions.GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ)
 
 FinalpSimExpOriginal = FinalpSimExp * 1
 FinalpSimExpE1Original = FinalpSimExpE1 * 1
@@ -526,7 +528,7 @@ for i in range(len(ra)):
   c.append(SkyCoord(ra[i], dec[i], frame='icrs', unit='deg'))
 
 Output = open('LineCandidatesPositive.dat','w')
-Output.write('#ID RA DEC FREQ SN P PE1 PE2 PSim PSimE1 PSimE2 PPesimistic PPesimisticE1 PPesimisticE2 PSimPesimistic PSimPesimisticE1 PSimPesimisticE2\n')
+Output.write('#ID RA DEC FREQ SN P PE1 PE2 PSim PSimE1 PSimE2 PPesimistic PPesimisticE1 PPesimisticE2 PSimPesimistic PSimPesimisticE1 PSimPesimisticE2 Kernel\n')
 
 for i in range(len(FinalX)):
   k = i + 1
@@ -537,14 +539,15 @@ for i in range(len(FinalX)):
   Line = Line +format(FinalpPoiExpOriginal[i],'.2f')+' '+format(FinalpPoiExpE1Original[i],'.2f')+' '+format(FinalpPoiExpE2Original[i],'.2f')+' '  
   Line = Line +format(FinalpSimExpOriginal[i],'.2f')+' '+format(FinalpSimExpE1Original[i],'.2f')+' '+format(FinalpSimExpE2Original[i],'.2f')+' '
   Line = Line +format(FinalpPoiExp[i],'.2f')+' '+format(FinalpPoiExpE1[i],'.2f')+' '+format(FinalpPoiExpE2[i],'.2f')+' '  
-  Line = Line +format(FinalpSimExp[i],'.2f')+' '+format(FinalpSimExpE1[i],'.2f')+' '+format(FinalpSimExpE2[i],'.2f')+'\n'
+  Line = Line +format(FinalpSimExp[i],'.2f')+' '+format(FinalpSimExpE1[i],'.2f')+' '+format(FinalpSimExpE2[i],'.2f')+' '
+  Line = Line +format(Kernel[i])+'\n'
   Output.write(Line)
 
 Output.close()
 
 
 ######## Negatives ########
-FinalX,FinalY,FinalChannel,FinalPuritySimulation,FinalPurityNegative,FinalPurityPoisson,FinalSN,FinalPSimultionE1,FinalPSimultionE2,FinalPPoissonE1,FinalPPoissonE2,FinalPuritySimulationE1,FinalPuritySimulationE2,FinalpNegDiv,FinalpNegDivE1,FinalpNegDivE2,FinalpSimExp,FinalpSimExpE1,FinalpSimExpE2,FinalpPoiExp,FinalpPoiExpE1,FinalpPoiExpE2 = LineSeekerFunctions.GetFinalCandidates(SourcesTotalNeg,PixelsPerBMAJ)
+FinalX,FinalY,FinalChannel,FinalPuritySimulation,FinalPurityNegative,FinalPurityPoisson,FinalSN,FinalPSimultionE1,FinalPSimultionE2,FinalPPoissonE1,FinalPPoissonE2,FinalPuritySimulationE1,FinalPuritySimulationE2,FinalpNegDiv,FinalpNegDivE1,FinalpNegDivE2,FinalpSimExp,FinalpSimExpE1,FinalpSimExpE2,FinalpPoiExp,FinalpPoiExpE1,FinalpPoiExpE2,Kernel = LineSeekerFunctions.GetFinalCandidates(SourcesTotalNeg,PixelsPerBMAJ)
 
 
 FinalpSimExpOriginal = FinalpSimExp * 1
@@ -605,7 +608,7 @@ for i in range(len(ra)):
   c.append(SkyCoord(ra[i], dec[i], frame='icrs', unit='deg'))
 
 Output = open('LineCandidatesNegative.dat','w')
-Output.write('#ID RA DEC FREQ SN P PE1 PE2 PSim PSimE1 PSimE2 PPesimistic PPesimisticE1 PPesimisticE2 PSimPesimistic PSimPesimisticE1 PSimPesimisticE2\n')
+Output.write('#ID RA DEC FREQ SN P PE1 PE2 PSim PSimE1 PSimE2 PPesimistic PPesimisticE1 PPesimisticE2 PSimPesimistic PSimPesimisticE1 PSimPesimisticE2 Kernel\n')
 
 for i in range(len(FinalX)):
   k = i + 1
@@ -616,7 +619,8 @@ for i in range(len(FinalX)):
   Line = Line +format(FinalpPoiExpOriginal[i],'.2f')+' '+format(FinalpPoiExpE1Original[i],'.2f')+' '+format(FinalpPoiExpE2Original[i],'.2f')+' '  
   Line = Line +format(FinalpSimExpOriginal[i],'.2f')+' '+format(FinalpSimExpE1Original[i],'.2f')+' '+format(FinalpSimExpE2Original[i],'.2f')+' '
   Line = Line +format(FinalpPoiExp[i],'.2f')+' '+format(FinalpPoiExpE1[i],'.2f')+' '+format(FinalpPoiExpE2[i],'.2f')+' '  
-  Line = Line +format(FinalpSimExp[i],'.2f')+' '+format(FinalpSimExpE1[i],'.2f')+' '+format(FinalpSimExpE2[i],'.2f')+'\n' 
+  Line = Line +format(FinalpSimExp[i],'.2f')+' '+format(FinalpSimExpE1[i],'.2f')+' '+format(FinalpSimExpE2[i],'.2f')+' '
+  Line = Line +format(Kernel[i])+'\n'
   Output.write(Line)
 
 Output.close()

@@ -390,6 +390,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	pPoiExp = []
 	pPoiExpE1 = []
 	pPoiExpE2 = []
+	kernel = []
 
 	for NewSource in SourcesTotalPos:
 			COORD.append(np.array([NewSource[1],NewSource[2],NewSource[0]]))
@@ -415,6 +416,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 			pPoiExp.append(NewSource[20])
 			pPoiExpE1.append(NewSource[21])
 			pPoiExpE2.append(NewSource[22])
+			kernel.append(NewSource[23])
 
 	COORD = np.array(COORD)
 	X = np.array(X)
@@ -439,6 +441,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	pPoiExp = np.array(pPoiExp)
 	pPoiExpE1 = np.array(pPoiExpE1)
 	pPoiExpE2 = np.array(pPoiExpE2)
+	kernel = np.array(kernel)
 
 	db = DBSCAN(eps=PixelsPerBMAJ, min_samples=1,leaf_size=30).fit(COORD)
 	core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
@@ -468,6 +471,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	FinalpPoiExp = []
 	FinalpPoiExpE1 = []
 	FinalpPoiExpE2 = []
+	FinalKernel = []
 
 	for k in unique_labels:
 		class_member_mask = (labels == k)
@@ -492,7 +496,8 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 		FinalpSimExpE2.append(pSimExpE2[class_member_mask][np.argmin(pSimExp[class_member_mask])])
 		FinalpPoiExp.append(min(pPoiExp[class_member_mask]))
 		FinalpPoiExpE1.append(pPoiExpE1[class_member_mask][np.argmin(pPoiExp[class_member_mask])])
-		FinalpPoiExpE2.append(pPoiExpE2[class_member_mask][np.argmin(pPoiExp[class_member_mask])])	
+		FinalpPoiExpE2.append(pPoiExpE2[class_member_mask][np.argmin(pPoiExp[class_member_mask])])
+		FinalKernel.append(kernel[class_member_mask][np.argmax(SN[class_member_mask])])
 
 
 	FinalX = np.array(FinalX)
@@ -517,6 +522,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	FinalpPoiExp = np.array(FinalpPoiExp)
 	FinalpPoiExpE1 = np.array(FinalpPoiExpE1)
 	FinalpPoiExpE2 = np.array(FinalpPoiExpE2)
+	FinalKernel = np.array(FinalKernel)
 
 
 	FinalX = FinalX[np.argsort(FinalSN)]
@@ -541,6 +547,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	FinalpPoiExpE1 = np.array(FinalpPoiExpE1)[np.argsort(FinalSN)]
 	FinalpPoiExpE2 = np.array(FinalpPoiExpE2)[np.argsort(FinalSN)]
 	FinalSN = FinalSN[np.argsort(FinalSN)]
+	FinalKernel = FinalKernel[np.argsort(FinalSN)]
 
 	output = [
 				FinalX,
@@ -564,7 +571,8 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 				FinalpSimExpE2,
 				FinalpPoiExp,
 				FinalpPoiExpE1,
-				FinalpPoiExpE2
+				FinalpPoiExpE2,
+				FinalKernel
 			]
 	return output
 
