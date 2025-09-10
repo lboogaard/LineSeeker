@@ -163,8 +163,9 @@ else:
 
 if args.UserEPS=='False':
 	PixelsPerBMAJ = LineSeekerFunctions.GetPixelsPerBMAJ(args.Cube)
-	if args.MaxSigmas == 1:
-		PixelsPerBMAJ = 1.0
+        ####LAB: I don't understand why you would set EPS=1 when searching a continuum image?
+	# if args.MaxSigmas == 1:
+	# 	PixelsPerBMAJ = 1.0
 	print('*** Using EPS value of '+str(PixelsPerBMAJ)+'***')
 else:
 	PixelsPerBMAJ = args.EPS

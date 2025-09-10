@@ -108,19 +108,20 @@ def main():
         print('*** Using Tophat Kernel ***')
 
 
-    #finding channel width
-    Header = fits.open(args.Cube)[0].header
-    RefFrequency = Header['CRVAL3']
-    ChannelSpacing = Header['CDELT3']
-    ApproxChannelVelocityWidth = (abs(ChannelSpacing)/RefFrequency)*3e5
-    ApproxMaxSigmas = int((1000.0/ApproxChannelVelocityWidth)/2.35) + 1
+    if args.MaxSigmas > 1:
+    #finding channel width (only for cube, skip for continuum when MaxSigmas=1)
+        Header = fits.open(args.Cube)[0].header
+        RefFrequency = Header['CRVAL3']
+        ChannelSpacing = Header['CDELT3']
+        ApproxChannelVelocityWidth = (abs(ChannelSpacing)/RefFrequency)*3e5
+        ApproxMaxSigmas = int((1000.0/ApproxChannelVelocityWidth)/2.35) + 1
 
-    if args.Kernel=='Gaussian' or args.Kernel=='gaussian':
-        print('*** MaxSigmas should be of the order of ',ApproxMaxSigmas,'to detect a line width FWHM ~ 1000 km/s ***')
-    else:
-        ApproxMaxSigmas = int ((1000.0/ApproxChannelVelocityWidth))+1
-        print('*** MaxSigmas should be of the order of ',ApproxMaxSigmas,'to detect a line width of ~ 1000 km/s for the Tophat Kernel (considering the reference frequency CRVAL3)***')
-    
+        if args.Kernel=='Gaussian' or args.Kernel=='gaussian':
+            print('*** MaxSigmas should be of the order of ',ApproxMaxSigmas,'to detect a line width FWHM ~ 1000 km/s ***')
+        else:
+            ApproxMaxSigmas = int ((1000.0/ApproxChannelVelocityWidth))+1
+            print('*** MaxSigmas should be of the order of ',ApproxMaxSigmas,'to detect a line width of ~ 1000 km/s for the Tophat Kernel (considering the reference frequency CRVAL3)***')
+
     try:
         LineSeekerFunctions.GetMinSNEstimate(args.Cube)
     except:
