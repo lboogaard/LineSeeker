@@ -269,7 +269,7 @@ def GetFinalSN(SourcesTotal,PixelsPerBMAJ):
 
 
 	FinalSN = np.array(FinalSN)
-	FinalSN = FinalSN[np.argsort(FinalSN)]
+	FinalSN = FinalSN[np.argsort(FinalSN, stable=True)]
 	return FinalSN
 
 def GetArraysFromFile(path,Sources,minSN):
@@ -390,7 +390,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	pPoiExp = []
 	pPoiExpE1 = []
 	pPoiExpE2 = []
-	kernel = []
+	Kernel = []
 
 	for NewSource in SourcesTotalPos:
 			COORD.append(np.array([NewSource[1],NewSource[2],NewSource[0]]))
@@ -416,7 +416,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 			pPoiExp.append(NewSource[20])
 			pPoiExpE1.append(NewSource[21])
 			pPoiExpE2.append(NewSource[22])
-			kernel.append(NewSource[23])
+			Kernel.append(NewSource[23])
 
 	COORD = np.array(COORD)
 	X = np.array(X)
@@ -441,7 +441,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	pPoiExp = np.array(pPoiExp)
 	pPoiExpE1 = np.array(pPoiExpE1)
 	pPoiExpE2 = np.array(pPoiExpE2)
-	kernel = np.array(kernel)
+	Kernel = np.array(Kernel)
 
 	db = DBSCAN(eps=PixelsPerBMAJ, min_samples=1,leaf_size=30).fit(COORD)
 	core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
@@ -475,9 +475,10 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 
 	for k in unique_labels:
 		class_member_mask = (labels == k)
-		FinalX.append(X[class_member_mask][np.argmax(SN[class_member_mask])])
-		FinalY.append(Y[class_member_mask][np.argmax(SN[class_member_mask])])
-		FinalChannel.append(Channel[class_member_mask][np.argmax(SN[class_member_mask])])
+		argmax_sn = np.argmax(SN[class_member_mask])
+		FinalX.append(X[class_member_mask][argmax_sn])
+		FinalY.append(Y[class_member_mask][argmax_sn])
+		FinalChannel.append(Channel[class_member_mask][argmax_sn])
 		FinalSN.append(max(SN[class_member_mask]))
 		FinalPuritySimulation.append(min(puritySimulation[class_member_mask]))
 		FinalPurityNegative.append(min(min(purityNegative[class_member_mask]),1))
@@ -497,7 +498,7 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 		FinalpPoiExp.append(min(pPoiExp[class_member_mask]))
 		FinalpPoiExpE1.append(pPoiExpE1[class_member_mask][np.argmin(pPoiExp[class_member_mask])])
 		FinalpPoiExpE2.append(pPoiExpE2[class_member_mask][np.argmin(pPoiExp[class_member_mask])])
-		FinalKernel.append(kernel[class_member_mask][np.argmax(SN[class_member_mask])])
+		FinalKernel.append(Kernel[class_member_mask][argmax_sn])
 
 
 	FinalX = np.array(FinalX)
@@ -524,30 +525,30 @@ def GetFinalCandidates(SourcesTotalPos,PixelsPerBMAJ):
 	FinalpPoiExpE2 = np.array(FinalpPoiExpE2)
 	FinalKernel = np.array(FinalKernel)
 
-
-	FinalX = FinalX[np.argsort(FinalSN)]
-	FinalY = FinalY[np.argsort(FinalSN)]
-	FinalChannel = FinalChannel[np.argsort(FinalSN)]
-	FinalPuritySimulation = FinalPuritySimulation[np.argsort(FinalSN)]
-	FinalPurityNegative = FinalPurityNegative[np.argsort(FinalSN)]
-	FinalPurityPoisson = FinalPurityPoisson[np.argsort(FinalSN)]
-	FinalPSimultionE1 = FinalPSimultionE1[np.argsort(FinalSN)]
-	FinalPSimultionE2 = FinalPSimultionE2[np.argsort(FinalSN)]
-	FinalPPoissonE1 = FinalPPoissonE1[np.argsort(FinalSN)]
-	FinalPPoissonE2 = FinalPPoissonE2[np.argsort(FinalSN)]
-	FinalPuritySimulationE1 = np.array(FinalPuritySimulationE1)[np.argsort(FinalSN)]
-	FinalPuritySimulationE2 = np.array(FinalPuritySimulationE2)[np.argsort(FinalSN)]
-	FinalpNegDiv = np.array(FinalpNegDiv)[np.argsort(FinalSN)]
-	FinalpNegDivE1 = np.array(FinalpNegDivE1)[np.argsort(FinalSN)]
-	FinalpNegDivE2 = np.array(FinalpNegDivE2)[np.argsort(FinalSN)]
-	FinalpSimExp = np.array(FinalpSimExp)[np.argsort(FinalSN)]
-	FinalpSimExpE1 = np.array(FinalpSimExpE1)[np.argsort(FinalSN)]
-	FinalpSimExpE2 = np.array(FinalpSimExpE2)[np.argsort(FinalSN)]
-	FinalpPoiExp = np.array(FinalpPoiExp)[np.argsort(FinalSN)]
-	FinalpPoiExpE1 = np.array(FinalpPoiExpE1)[np.argsort(FinalSN)]
-	FinalpPoiExpE2 = np.array(FinalpPoiExpE2)[np.argsort(FinalSN)]
-	FinalSN = FinalSN[np.argsort(FinalSN)]
-	FinalKernel = FinalKernel[np.argsort(FinalSN)]
+	argsort_sn = np.argsort(FinalSN, stable=True)
+	FinalX = FinalX[argsort_sn]
+	FinalY = FinalY[argsort_sn]
+	FinalChannel = FinalChannel[argsort_sn]
+	FinalPuritySimulation = FinalPuritySimulation[argsort_sn]
+	FinalPurityNegative = FinalPurityNegative[argsort_sn]
+	FinalPurityPoisson = FinalPurityPoisson[argsort_sn]
+	FinalPSimultionE1 = FinalPSimultionE1[argsort_sn]
+	FinalPSimultionE2 = FinalPSimultionE2[argsort_sn]
+	FinalPPoissonE1 = FinalPPoissonE1[argsort_sn]
+	FinalPPoissonE2 = FinalPPoissonE2[argsort_sn]
+	FinalPuritySimulationE1 = np.array(FinalPuritySimulationE1)[argsort_sn]
+	FinalPuritySimulationE2 = np.array(FinalPuritySimulationE2)[argsort_sn]
+	FinalpNegDiv = np.array(FinalpNegDiv)[argsort_sn]
+	FinalpNegDivE1 = np.array(FinalpNegDivE1)[argsort_sn]
+	FinalpNegDivE2 = np.array(FinalpNegDivE2)[argsort_sn]
+	FinalpSimExp = np.array(FinalpSimExp)[argsort_sn]
+	FinalpSimExpE1 = np.array(FinalpSimExpE1)[argsort_sn]
+	FinalpSimExpE2 = np.array(FinalpSimExpE2)[argsort_sn]
+	FinalpPoiExp = np.array(FinalpPoiExp)[argsort_sn]
+	FinalpPoiExpE1 = np.array(FinalpPoiExpE1)[argsort_sn]
+	FinalpPoiExpE2 = np.array(FinalpPoiExpE2)[argsort_sn]
+	FinalSN = FinalSN[argsort_sn]
+	FinalKernel = FinalKernel[argsort_sn]
 
 	output = [
 				FinalX,

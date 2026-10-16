@@ -277,10 +277,12 @@ for i in range(args.MaxSigmas):
 	Sources_real = np.array(Sources_real,dtype='object')
 	Sources_realNeg = np.array(Sources_realNeg,dtype='object')
 
-	Sources_real = Sources_real[np.argsort(SNReal)][::-1]
-	SNReal = SNReal[np.argsort(SNReal)][::-1]
-	Sources_realNeg = Sources_realNeg[np.argsort(SNRealNeg)][::-1]
-	SNRealNeg = SNRealNeg[np.argsort(SNRealNeg)][::-1]
+	argsort_snreal = np.argsort(SNReal)
+	Sources_real = Sources_real[argsort_snreal][::-1]
+	SNReal = SNReal[argsort_snreal][::-1]
+	argsort_snrealneg = np.argsort(SNRealNeg)
+	Sources_realNeg = Sources_realNeg[argsort_snrealneg][::-1]
+	SNRealNeg = SNRealNeg[argsort_snrealneg][::-1]
 
 	# print type(SNReal),type(SNReal[0]),SNReal
 	# SNReal = 1.0*np.around(SNReal,1)
