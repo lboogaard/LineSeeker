@@ -123,6 +123,14 @@ Changed the naming scheme for the candidates.
 
 Added the creation of a file with the parameters used. I addded this so I could try to automatize the search. 
 ---------------------------------------------------------------------------------------------
+v2.1
+Author: Leindert Boogaard
+
+Add support for cubes without stokes axes
+Save kernel of highest S/N template in output catalog
+Ensure a stable argsort
+Fixed some warnings related to python>3 and numpy>2
+
 '''
 
 
