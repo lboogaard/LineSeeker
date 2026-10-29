@@ -45,6 +45,7 @@ def main():
     parser.add_argument('-Cube', type=str, required=True,help = 'Path to the Cube fits file where the search will be done')
     parser.add_argument('-OutputPath', type=str, default='OutputLineSearch', required=False , help = 'Directory where the outputs will be saved, if exists the codes finished, otherwise will be created [Default:OutputLineSearch]')
     parser.add_argument('-MinSN', type=float, default = 5.0, required=False,help = 'Minimum S/N value to save in the outputs. A good value depends on each data cube, reasonable values are bettween 3.5 and 6 [Default:5.0]')
+    parser.add_argument('-MinSigmas', type=int, default = 0, required=False,help = 'Minimum number of channels to use as sigma value for the spectral Gaussian convolution. [Default:10]')
     parser.add_argument('-MaxSigmas', type=int, default = 10, required=False,help = 'Maximum number of channels to use as sigma value for the spectral Gaussian convolution. [Default:10]')
     parser.add_argument('-ContinuumImage', type=str, default = 'Continuum.fits', required=False,help = 'Continuum image to use to create a mask. [Default:Continuum.fits]')
     parser.add_argument('-MaskSN', type=float, default = 5.0, required=False,help = 'S/N value to use as limit to create mask from continuum image. [Default:5.0]')
@@ -128,7 +129,7 @@ def main():
         print('*** problems reading header ***')
         
     # Main loop to do the search
-    for sigmas in range(args.MaxSigmas):
+    for sigmas in range(args.MinSigmas, args.MaxSigmas):
         LineSeekerFunctions.SearchLine(args.Cube,args.OutputPath,args.MinSN,sigmas,UseMask,args.ContinuumImage,args.MaskSN,args.Kernel)
 
 main()

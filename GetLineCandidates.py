@@ -138,6 +138,7 @@ parser = argparse.ArgumentParser(description="Python script that finds line emis
 parser.add_argument('-Cube', type=str, required=True,help = 'Path to the Cube fits file where the search will be done')
 parser.add_argument('-LineSearchPath', type=str, default='OutputLineSearch', required=False , help = 'Directory where the outputs will be saved [Default:LineSearchPath]')
 parser.add_argument('-SimulationPath', type=str, default='Simulation', required=False , help = 'Directory where the simulations should be found [Default:Simulation]')
+parser.add_argument('-MinSigmas', type=int, default = 0, required=False,help = 'Minimum number of channels to use as sigma value for the spectral Gaussian convolution. [Default:10]')
 parser.add_argument('-MaxSigmas', type=int, default = 10, required=False,help = 'Maximum number of channels to use as sigma value for the spectral Gaussian convolution. [Default:10]')
 parser.add_argument('-MinSN', type=float, default = 5.0, required=False,help = 'Minimum S/N value to save in the outputs. A good value depends on each data cube, reasonable values are bettween 3.5 and 6 [Default:5.0]')
 parser.add_argument('-SurveyName', type=str, default='Survey', required=False , help = 'Name to identify the line candidates [Default:Survey]')
@@ -195,7 +196,7 @@ fig1 = plt.figure(figsize=(w,h))
 fig1.subplots_adjust(left=0.15, bottom=0.13, right=0.94, top=0.96,wspace=0.10, hspace=0.2)
 ax1 = fig1.add_subplot(111)
 
-for i in range(args.MaxSigmas):
+for i in range(args.MinSigmas, args.MaxSigmas):
 	print(50*'-')
 	Sources_real = np.array(LineSeekerFunctions.GetSourcesFromFiles([args.LineSearchPath+'/line_dandidates_sn_sigmas'+str(i)+'_pos'],args.MinSN,PixelsPerBMAJ), dtype=object)
 	Sources_realNeg = np.array(LineSeekerFunctions.GetSourcesFromFiles([args.LineSearchPath+'/line_dandidates_sn_sigmas'+str(i)+'_neg'],args.MinSN,PixelsPerBMAJ), dtype=object)
